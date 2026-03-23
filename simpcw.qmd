@@ -46,7 +46,7 @@ library(vegan)
 wt_auth()
 
 load('simpcw.RData')
-#save.image('simpcw.RData')
+save.image('simpcw.RData')
 ```
 
 # Abstract
@@ -78,7 +78,12 @@ simpcw_cam_projects <- wildrtrax::wt_get_projects(sensor = 'CAM') |>
 
 simpcw_locs <- simpcw_cam_projects |>
   select(location, latitude, longitude) |>
-  bind_rows(simpcw_aru_projects |> select(location, latitude, longitude)) |>
+  mutate(sensor = "cam") |>
+  bind_rows(
+    simpcw_aru_projects |>
+      select(location, latitude, longitude) |>
+      mutate(sensor = "aru")
+  ) |>
   distinct()
 
 ```
@@ -92,10 +97,9 @@ simpcw_locs <- simpcw_cam_projects |>
 # Results
 
 ```{r}
+#| eval: false
 
 simpcw_locs_sf <- simpcw_locs |>
-  select(locationName, latitude, longitude, sensors, recordingCount, imageCount) |>
-  distinct() |>
   drop_na(latitude) |>
   sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)
 
@@ -103,7 +107,7 @@ m <- leaflet(simpcw_locs_sf) %>%
   addTiles() %>%
   addCircleMarkers(
     popup = ~paste0(
-      "<b>Location:</b> ", locationName, "<br>",
+      "<b>Location:</b> ", location, "<br>",
       "<b>Sensors:</b> ", sensors
     )) %>%
   addMeasure(primaryLengthUnit = "meters", primaryAreaUnit = "sqmeters") %>%
