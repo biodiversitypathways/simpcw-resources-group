@@ -1,0 +1,91 @@
+---
+title: "Report on the use of passive acoustic and remote camera monitoring for the Simpcw Resources Group"
+format:
+  html:
+    grid:
+      margin-width: 300px
+navbar: right
+theme: cosmo
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author: 
+  - name: "Alex MacPhail"
+    affiliation: "Biodiversity Pathways Ltd."
+  - name: "Orna Phelan"
+    affiliation: "North Slave Métis Alliance"
+editor: visual
+bibliography: references.bib
+nocite: '@*'
+toc: true
+toc-depth: 3
+toc-expand: true
+toc-location: left
+styles: styles.css
+github: https://github.com/biodiversitypathways/nsma
+---
+
+![]()
+
+```{r}
+#| label: load-packages and authenticate
+#| include: false
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(leaflet)
+library(wildrtrax)
+library(sf)
+library(ggridges)
+library(kableExtra)
+library(plotly)
+library(DT)
+library(vegan)
+
+wt_auth()
+
+load('simpcw.RData')
+#save.image('simpcw.RData')
+```
+
+# Abstract
+
+::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
+This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.
+:::
+
+```{r Data download}
+#| warning: false
+#| message: false
+#| echo: true
+#| eval: false
+#| include: true
+#| code-fold: true
+
+# Download data from WildTrax
+simpcw_aru_projects <- wildrtrax::wt_get_projects(sensor = 'ARU') |>
+  filter(grepl('^Simpcw', project)) |>
+  select(project_id) |>
+  pull() |>
+  wt_download_report('ARU', 'main')
+
+simpcw_cam_projects <- wildrtrax::wt_get_projects(sensor = 'CAM') |>
+  filter(grepl('^Simpcw', project)) |>
+  select(project_id) |>
+  pull() |>
+  wt_download_report('CAM', 'main')
+
+```
+
+# Land Acknowledgement
+
+# Introduction
+
+# Methods
+
+# Results
+
+# Discussion and Recommendations
+
+- Conduct ARU sampling during the breeding bird season
