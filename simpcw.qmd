@@ -76,6 +76,11 @@ simpcw_cam_projects <- wildrtrax::wt_get_projects(sensor = 'CAM') |>
   pull() |>
   wt_download_report('CAM', 'main')
 
+simpcw_locs <- simpcw_cam_projects |>
+  select(location, latitude, longitude) |>
+  bind_rows(simpcw_aru_projects |> select(location, latitude, longitude)) |>
+  distinct()
+
 ```
 
 # Land Acknowledgement
@@ -85,6 +90,34 @@ simpcw_cam_projects <- wildrtrax::wt_get_projects(sensor = 'CAM') |>
 # Methods
 
 # Results
+
+```{r}
+
+simpcw_locs_sf <- simpcw_locs |>
+  select(locationName, latitude, longitude, sensors, recordingCount, imageCount) |>
+  distinct() |>
+  drop_na(latitude) |>
+  sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)
+
+m <- leaflet(simpcw_locs_sf) %>%
+  addTiles() %>%
+  addCircleMarkers(
+    popup = ~paste0(
+      "<b>Location:</b> ", locationName, "<br>",
+      "<b>Sensors:</b> ", sensors
+    )) %>%
+  addMeasure(primaryLengthUnit = "meters", primaryAreaUnit = "sqmeters") %>%
+  addMiniMap(position = "bottomleft")
+
+if (knitr::is_html_output()) {
+  m
+} else {
+  map_file <- "map_aru_locations.png"
+  if (!file.exists(map_file)) mapview::mapshot2(m, file = map_file)
+  knitr::include_graphics(map_file)
+}
+
+```
 
 # Discussion and Recommendations
 
