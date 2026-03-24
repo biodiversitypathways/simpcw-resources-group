@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Alex MacPhail">
-<meta name="author" content="Orna Phelan">
-<meta name="dcterms.date" content="2026-03-23">
+<meta name="author" content="Jack Creeggan">
+<meta name="dcterms.date" content="2026-03-24">
 
 <title>Report on the use of passive acoustic and remote camera monitoring for the Simpcw Resources Group</title>
 <style>
@@ -73,6 +73,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="simpcw_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="simpcw_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="simpcw_files/libs/bootstrap/bootstrap-d9ee3e7c13397ee64e8144b167ea800e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="simpcw_files/libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="simpcw_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="simpcw_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="simpcw_files/libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="simpcw_files/libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="simpcw_files/libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="simpcw_files/libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="simpcw_files/libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="simpcw_files/libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="simpcw_files/libs/leaflet-binding-2.2.2/leaflet.js"></script>
+<link href="simpcw_files/libs/leaflet-measure-2.1.7/leaflet-measure.css" rel="stylesheet">
+<script src="simpcw_files/libs/leaflet-measure-2.1.7/leaflet-measure.min.js"></script>
+<link href="simpcw_files/libs/leaflet-minimap-3.3.1/Control.MiniMap.min.css" rel="stylesheet">
+<script src="simpcw_files/libs/leaflet-minimap-3.3.1/Control.MiniMap.min.js"></script>
+<script src="simpcw_files/libs/leaflet-minimap-3.3.1/Minimap-binding.js"></script>
+<link href="simpcw_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="simpcw_files/libs/datatables-binding-0.33/datatables.js"></script>
+<link href="simpcw_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="simpcw_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="simpcw_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="simpcw_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="simpcw_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
 
 
 </head>
@@ -88,7 +110,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
   <li><a href="#land-acknowledgement" id="toc-land-acknowledgement" class="nav-link" data-scroll-target="#land-acknowledgement">Land Acknowledgement</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#data-collection" id="toc-data-collection" class="nav-link" data-scroll-target="#data-collection">Data collection</a></li>
+  <li><a href="#acoustic-data" id="toc-acoustic-data" class="nav-link" data-scroll-target="#acoustic-data">Acoustic data</a></li>
+  <li><a href="#camera-data" id="toc-camera-data" class="nav-link" data-scroll-target="#camera-data">Camera data</a></li>
+  </ul></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
   <li><a href="#discussion-and-recommendations" id="toc-discussion-and-recommendations" class="nav-link" data-scroll-target="#discussion-and-recommendations">Discussion and Recommendations</a></li>
   </ul>
@@ -106,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta-author">
   <div class="quarto-title-meta-heading">Authors</div>
-  <div class="quarto-title-meta-heading">Affiliations</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
   
     <div class="quarto-title-meta-contents">
     <p class="author">Alex MacPhail </p>
@@ -117,11 +144,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </p>
       </div>
     <div class="quarto-title-meta-contents">
-    <p class="author">Orna Phelan </p>
+    <p class="author">Jack Creeggan </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
-            North Slave Métis Alliance
+            Biodiversity Pathways Ltd.
           </p>
       </div>
   </div>
@@ -132,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 23, 2026</p>
+      <p class="date">March 24, 2026</p>
     </div>
   </div>
   
@@ -181,13 +208,14 @@ Note
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>simpcw_locs <span class="ot">&lt;-</span> simpcw_cam_projects <span class="sc">|&gt;</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, latitude, longitude) <span class="sc">|&gt;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sensor =</span> <span class="st">"cam"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sensor =</span> <span class="st">"Camera"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    simpcw_aru_projects <span class="sc">|&gt;</span></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(location, latitude, longitude) <span class="sc">|&gt;</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">sensor =</span> <span class="st">"aru"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">Sensor =</span> <span class="st">"ARU"</span>, <span class="at">.after =</span> location)</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Location =</span> location, <span class="at">Latitude =</span> latitude, <span class="at">Longitude =</span> longitude)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -199,20 +227,21 @@ Note
 </section>
 <section id="methods" class="level1">
 <h1>Methods</h1>
-</section>
-<section id="results" class="level1">
-<h1>Results</h1>
-<div class="cell">
+<section id="data-collection" class="level2">
+<h2 class="anchored" data-anchor-id="data-collection">Data collection</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simpcw_locs_sf <span class="ot">&lt;-</span> simpcw_locs <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(latitude) <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitude"</span>,<span class="st">"latitude"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(Latitude) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"Longitude"</span>,<span class="st">"Latitude"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">leaflet</span>(simpcw_locs_sf) <span class="sc">%&gt;%</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircleMarkers</span>(</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup =</span> <span class="sc">~</span><span class="fu">paste0</span>(</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"&lt;b&gt;Location:&lt;/b&gt; "</span>, location, <span class="st">"&lt;br&gt;"</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"&lt;b&gt;Sensors:&lt;/b&gt; "</span>, sensors</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"&lt;b&gt;Location:&lt;/b&gt; "</span>, Location, <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"&lt;b&gt;Sensors:&lt;/b&gt; "</span>, Sensor</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMeasure</span>(<span class="at">primaryLengthUnit =</span> <span class="st">"meters"</span>, <span class="at">primaryAreaUnit =</span> <span class="st">"sqmeters"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMiniMap</span>(<span class="at">position =</span> <span class="st">"bottomleft"</span>)</span>
@@ -224,6 +253,121 @@ Note
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(map_file)) mapview<span class="sc">::</span><span class="fu">mapshot2</span>(m, <span class="at">file =</span> map_file)</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">include_graphics</span>(map_file)</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-aru-monitoring-locations" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-aru-monitoring-locations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-c3d99638d57b7fce387c" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-c3d99638d57b7fce387c">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[52.695428,52.919837,53.032072,53.199454],[-119.810276,-119.815674,-120.089169,-120.011685],10,null,null,{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},null,null,["<b>Location:<\/b> RAU-286-2<br><b>Sensors:<\/b> ARU","<b>Location:<\/b> RAU-322-2<br><b>Sensors:<\/b> ARU","<b>Location:<\/b> RAU-330-2<br><b>Sensors:<\/b> ARU","<b>Location:<\/b> RAU-350-1<br><b>Sensors:<\/b> ARU"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMeasure","args":[{"position":"topright","primaryLengthUnit":"meters","primaryAreaUnit":"sqmeters","activeColor":"#ABE67E","completedColor":"#C8F2BE","popupOptions":{"className":"leaflet-measure-resultpopup","autoPanPadding":[10,10]},"captureZIndex":10000,"localization":"en","decPoint":".","thousandsSep":","}]},{"method":"addMiniMap","args":[null,null,"bottomleft",150,150,19,19,-5,false,false,false,false,false,false,{"color":"#ff7800","weight":1,"clickable":false},{"color":"#000000","weight":1,"clickable":false,"opacity":0,"fillOpacity":0},{"hideText":"Hide MiniMap","showText":"Show MiniMap"},[]]}],"limits":{"lat":[52.695428,53.199454],"lng":[-120.089169,-119.810276]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aru-monitoring-locations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Locations from Simcpw Resources Group ARU and Camera Monitoring Program
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-loc-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-loc-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Locations surveyed.
+</figcaption>
+<div aria-describedby="tbl-loc-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b3c59db9797ce0ccfe99" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b3c59db9797ce0ccfe99">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45"],["RAU-286-1A","RAU-286-1B","RAU-286-1C","RAU-286-1D","RAU-286-2A","RAU-286-2B","RAU-296-1A","RAU-296-1B","RAU-296-1C","RAU-297-1A","RAU-297-1B","RAU-297-1C","RAU-297A","RAU-301-1A","RAU-301-1B","RAU-305-1A","RAU-314-1A","RAU-314-1B","RAU-314-1C","RAU-318-1A","RAU-318-1B","RAU-322-1A","RAU-322-1B","RAU-324-1A","RAU-324-1B","RAU-327-1A","RAU-327-1B","RAU-330-1A","RAU-336-1A","RAU-337-1A","RAU-337-1B","RAU-337-1C","RAU-338-1A","RAU-338-1B","RAU-338-1C","RAU-341-1A","RAU-348-1A","RAU-348-1B","RAU-348-1C","RAU-348-1D","RAU-350-1A","RAU-286-2","RAU-322-2","RAU-330-2","RAU-350-1"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,52.695428,52.919837,53.032072,53.199454],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,-119.810276,-119.815674,-120.089169,-120.011685],["Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","ARU","ARU","ARU","ARU"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Location<\/th>\n      <th>Latitude<\/th>\n      <th>Longitude<\/th>\n      <th>Sensor<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":true,"paging":true,"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Location","targets":1},{"name":"Latitude","targets":2},{"name":"Longitude","targets":3},{"name":"Sensor","targets":4}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background-color':value == \"NA\" ? \"lightgray\" : null});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background-color':value == \"NA\" ? \"lightgray\" : null});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'background-color':value == \"NA\" ? \"lightgray\" : null});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'background-color':value == \"NA\" ? \"lightgray\" : null});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="acoustic-data" class="level2">
+<h2 class="anchored" data-anchor-id="acoustic-data">Acoustic data</h2>
+<div class="callout callout-style-default callout-note callout-titled" style="background-color: #f4f4f4; padding: 20px;">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Advanced users can also use <code>wildrtrax</code> with <code>wt_get_sync(api = "organization_recordings", organization = 5647)</code>. Ensure you have correct access to the Organization as these projects are not currently published 2026-03-24.</p>
+</div>
+</div>
+</div>
+<p>The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, we randomly selected 8 recordings per location. Four were processed for 3-minutes between the hours of 3:00 AM - 7:59 AM (dawn period) and four between 20:00 - 23:59 PM (dusk period), ideally on four separate dates. Each of the selections were also chosen on days that did not have any inclement weather (heavy rain or wind), which would be unfavourable for bird surveys. Four samples ensures that there is a minimum number of samples being able to detect most species. Tags are made using count-removal (<span class="citation" data-cites="farnsworth2002removal">(<a href="#ref-farnsworth2002removal" role="doc-biblioref"><strong>farnsworth2002removal?</strong></a>)</span>, <span class="citation" data-cites="time-removal">(<a href="#ref-time-removal" role="doc-biblioref"><strong>time-removal?</strong></a>)</span>) where tags are only made at the time of first detection of each individual heard on the recordings. Amphibian abundance was estimated at the time of first detection using the <a href="https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program">North American Amphibian Monitoring Program</a> with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. We also verified that all tags that were created were checked by a second observer to ensure accuracy of detections (<a href="#tbl-verified" class="quarto-xref">Table&nbsp;2</a> and <a href="#tbl-cam-verified" class="quarto-xref">Table&nbsp;3</a>). In addition to human transcription, we also ensured that species were not missed at the location level using additional information from HawkEars (<span class="citation" data-cites="huus2025hawkears">(<a href="#ref-huus2025hawkears" role="doc-biblioref"><strong>huus2025hawkears?</strong></a>)</span>), a North American multi-species acoustic classifier, at the task level to avoid false negatives, or missed detections by the tagger. After the data are processed in WildTrax, the wildrtrax package is used to download the data into a standard format prepared for analysis. The wt_download_report function downloads the data directly to a R framework for easy manipulation(see <a href="https://abbiodiversity.github.io/wildrtrax/articles/apis.html">wildrtrax APIs</a>).</p>
+<div class="cell">
+<div id="tbl-verified" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Summary of acoustic verified tags
+</figcaption>
+<div aria-describedby="tbl-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-790c472af1bebd165d20" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-790c472af1bebd165d20">{"x":{"filter":"none","vertical":false,"data":[["1","2"],[false,null],[18,20],[47.37,52.63]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Tag is verified<\/th>\n      <th>Count<\/th>\n      <th>Proportion<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":true,"paging":true,"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Tag is verified","targets":1},{"name":"Count","targets":2},{"name":"Proportion","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="camera-data" class="level2">
+<h2 class="anchored" data-anchor-id="camera-data">Camera data</h2>
+<p>41 camera deployments were tagged by different observers using the WildTrax platform. Prior to manual tagging, MegaDetector (<span class="citation" data-cites="beery2023megadetector">(<a href="#ref-beery2023megadetector" role="doc-biblioref"><strong>beery2023megadetector?</strong></a>)</span>) was run on the deployments to auto-tag images with humans, vehicles, and false detections. Bounding boxes were also placed around suspected detections. Detections of animals were tagged for species, and mammal detections received additional tags for count, age, and sex where identification was possible. In addition to animal species, observers manually tagged images with humans, vehicles, and false detections that MegaDetector failed to tag. Tags of mammal species were independently verified by two separate observers who did not participate in initial tagging. Count, age, and sex tags were also verified along with species, and detections tagged as “Unidentified” were verified in case species could be determined. Tags such as human or vehicle, were not verified. Following species verification, tags were quality checked for typos and logical inconsistencies.</p>
+<div class="cell">
+<div id="tbl-cam-verified" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cam-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Summary of image verified tags
+</figcaption>
+<div aria-describedby="tbl-cam-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5ce43f4d86c8af23aa73" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5ce43f4d86c8af23aa73">{"x":{"filter":"none","vertical":false,"data":[["1"],[false],[26488],[100]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Tag is verified<\/th>\n      <th>Count<\/th>\n      <th>Proportion<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":true,"paging":true,"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Tag is verified","targets":1},{"name":"Count","targets":2},{"name":"Proportion","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<p>A total of 36 species were detected across all monitoring sites. Species detections by location are summarized in <a href="#tbl-species-clean" class="quarto-xref">Table&nbsp;4</a>, including the maximum count recorded for each species. <a href="#fig-shannon" class="quarto-xref">Figure&nbsp;2</a> <strong>?@fig-community</strong>.</p>
+<div class="cell">
+<div id="tbl-species-clean" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-species-clean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Summary
+</figcaption>
+<div aria-describedby="tbl-species-clean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-8c36203e43d2f943916c" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8c36203e43d2f943916c">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33"],["RAU-286-2","RAU-322-2","RAU-330-2","RAU-286-1A","RAU-286-1B","RAU-286-1C","RAU-286-1D","RAU-286-2A","RAU-286-2B","RAU-296-1A","RAU-296-1B","RAU-296-1C","RAU-297-1B","RAU-297-1C","RAU-297A","RAU-301-1A","RAU-301-1B","RAU-318-1A","RAU-322-1B","RAU-324-1A","RAU-324-1B","RAU-327-1A","RAU-327-1B","RAU-330-1A","RAU-336-1A","RAU-337-1A","RAU-338-1A","RAU-338-1C","RAU-341-1A","RAU-348-1B","RAU-348-1C","RAU-348-1D","RAU-350-1A"],[52.695428,52.919837,53.032072,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[-119.810276,-119.815674,-120.089169,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],["ARU","ARU","ARU","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera","Camera"],[1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,1,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,1,1,2,3,2,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,3,1,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,1,2,1],[null,null,null,null,null,1,1,null,null,null,null,null,null,null,null,null,null,null,2,2,2,null,null,null,null,null,null,null,null,null,1,null,null],[null,null,null,null,null,1,1,1,1,1,1,1,null,null,null,null,null,null,null,null,null,1,1,null,null,null,1,1,null,1,null,null,1],[null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null],[null,null,null,null,null,1,1,1,null,null,2,2,null,null,null,null,null,1,null,null,null,null,1,null,null,null,3,2,null,null,null,1,2],[null,null,null,null,null,null,2,2,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,3,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,1,2,1],[null,null,null,null,null,null,null,null,null,1,null,null,null,1,null,null,1,null,1,null,1,null,1,1,null,1,null,1,1,null,null,1,1],[null,null,null,null,null,null,null,null,null,null,null,1,1,1,1,1,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,2,null],[null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,2,null,null,2,2,null,null,null,null,null,null,null,1,1,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,1,1,null,null,null,null,null,null,null,2,null,null,1,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,1,1,null,null,1,null,null,null,null,null,null,1,null,1,null,1,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,1,null,null,1,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2,null,null,null,1,null,null,null,null,null,null,null,null,null,null,1,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,1,null,1,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,1,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,1,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,1,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,3,2,null,null,null,2,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>location<\/th>\n      <th>Latitude<\/th>\n      <th>Longitude<\/th>\n      <th>Sensor<\/th>\n      <th>Dark-eyed Junco<\/th>\n      <th>Golden-crowned Sparrow<\/th>\n      <th>Varied Thrush<\/th>\n      <th>Hermit Thrush<\/th>\n      <th>Mourning Warbler<\/th>\n      <th>Pine Siskin<\/th>\n      <th>Woodland Caribou<\/th>\n      <th>Deer<\/th>\n      <th>Grizzly Bear<\/th>\n      <th>Moose<\/th>\n      <th>North American Porcupine<\/th>\n      <th>White-tailed Deer<\/th>\n      <th>Bear<\/th>\n      <th>Mule Deer<\/th>\n      <th>Unidentified<\/th>\n      <th>Black Bear<\/th>\n      <th>Hoary Marmot<\/th>\n      <th>Mountain Goat<\/th>\n      <th>Bird<\/th>\n      <th>Ptarmigans<\/th>\n      <th>American Marten<\/th>\n      <th>Columbian Ground Squirrel<\/th>\n      <th>Northern Flying Squirrel<\/th>\n      <th>Weasels and Ermine<\/th>\n      <th>Wolverine<\/th>\n      <th>Cougar<\/th>\n      <th>Golden-Mantled Ground Squirrel<\/th>\n      <th>Coyote<\/th>\n      <th>Domestic Cow<\/th>\n      <th>Domestic Horse<\/th>\n      <th>Gray Wolf<\/th>\n      <th>Domestic Dog<\/th>\n      <th>Red Fox<\/th>\n      <th>American Pika<\/th>\n      <th>Bushy-tailed Woodrat<\/th>\n      <th>Elk (wapiti)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":true,"paging":true,"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"location","targets":1},{"name":"Latitude","targets":2},{"name":"Longitude","targets":3},{"name":"Sensor","targets":4},{"name":"Dark-eyed Junco","targets":5},{"name":"Golden-crowned Sparrow","targets":6},{"name":"Varied Thrush","targets":7},{"name":"Hermit Thrush","targets":8},{"name":"Mourning Warbler","targets":9},{"name":"Pine Siskin","targets":10},{"name":"Woodland Caribou","targets":11},{"name":"Deer","targets":12},{"name":"Grizzly Bear","targets":13},{"name":"Moose","targets":14},{"name":"North American Porcupine","targets":15},{"name":"White-tailed Deer","targets":16},{"name":"Bear","targets":17},{"name":"Mule Deer","targets":18},{"name":"Unidentified","targets":19},{"name":"Black Bear","targets":20},{"name":"Hoary Marmot","targets":21},{"name":"Mountain Goat","targets":22},{"name":"Bird","targets":23},{"name":"Ptarmigans","targets":24},{"name":"American Marten","targets":25},{"name":"Columbian Ground Squirrel","targets":26},{"name":"Northern Flying Squirrel","targets":27},{"name":"Weasels and Ermine","targets":28},{"name":"Wolverine","targets":29},{"name":"Cougar","targets":30},{"name":"Golden-Mantled Ground Squirrel","targets":31},{"name":"Coyote","targets":32},{"name":"Domestic Cow","targets":33},{"name":"Domestic Horse","targets":34},{"name":"Gray Wolf","targets":35},{"name":"Domestic Dog","targets":36},{"name":"Red Fox","targets":37},{"name":"American Pika","targets":38},{"name":"Bushy-tailed Woodrat","targets":39},{"name":"Elk (wapiti)","targets":40}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-cap-location="bottom">
+<div class="cell-output-display">
+<div id="fig-shannon" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shannon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="simpcw_files/figure-html/fig-shannon-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shannon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Shannon diversity index at each location. A site with a high Shannon diversity index had many species detected in roughly equal numbers. A site with a low score was dominated by one or two common species, with few others present.
+</figcaption>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="discussion-and-recommendations" class="level1">
