@@ -1,9 +1,17 @@
 ---
-title: "Report on the use of passive acoustic and remote camera monitoring for the Simpcw Resources Group"
+title: "Report on the use of passive acoustic and remote camera monitoring in the Raush Valley"
 format:
   html:
     grid:
       margin-width: 300px
+  pdf:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    colorlinks: true
+    geometry:
+      - margin=1in
+    papersize: letter
 navbar: right
 theme: cosmo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -18,12 +26,13 @@ nocite: '@*'
 toc: true
 toc-depth: 3
 toc-expand: true
+prefer-html: true
 toc-location: left
 styles: styles.css
-github: https://github.com/biodiversitypathways/nsma
+github: https://github.com/biodiversitypathways/simpcw-resources-group
 ---
 
-![]()
+![Site RAU-286B Grizzly Bear](./assets/286B.png)
 
 ```{r}
 #| label: load-packages and authenticate
@@ -58,10 +67,9 @@ This report is dynamically generated, meaning its results may evolve with the ad
 ```{r Data download}
 #| warning: false
 #| message: false
-#| echo: true
+#| echo: false
 #| eval: false
 #| include: true
-#| code-fold: true
 
 # Download data from WildTrax
 simpcw_aru_projects <- wildrtrax::wt_get_projects(sensor = 'ARU') |>
@@ -97,30 +105,88 @@ simpcw_locs <- simpcw_cam_projects |>
 
 ## Data collection
 
+Cameras and autonomous recording units (ARUs) were deployed across `r n_distinct(simpcw_locs$Location)` sites in the Raush Valley watershed (@fig-aru-monitoring-locations). A total of `r nrow(simpcw_locs)` sensors were deployed, comprising `r simpcw_locs |> filter(Sensor == "Camera") |> nrow()` cameras and `r simpcw_locs |> filter(Sensor == "ARU") |> nrow()` ARUs, distributed across `r simpcw_locs |> mutate(block = str_extract(Location, "RAU-\\d+")) |> distinct(block) |> nrow()` monitoring blocks in the valley. A total of `r nrow(srg_recs)` recordings and `r sum(srg_cam_imgs$totalImageCount)` images were collected, with most data collection spanning between `r min(srg_cam_imgs$startDate)` and `r max(srg_cam_imgs$startDate)`.
+
 ```{r}
 #| warning: false
-#| echo: true
+#| message: false
+#| echo: false
+#| eval: false
+#| include: true
+
+srg_recs <- wt_get_sync("organization_recordings", organization = 5647)
+srg_cam_imgs <- wt_get_view("project_camera_tasks", project = 4146)
+```
+
+```{r}
+#| warning: false
+#| echo: false
 #| eval: true
 #| message: false
 #| include: true
-#| collapse: true
-#| code-fold: true
 #| fig-align: center
 #| fig-cap: Locations from Simcpw Resources Group ARU and Camera Monitoring Program
 #| label: fig-aru-monitoring-locations
+
+sensor_styles <- list(
+  Camera = list(color = "#E8593C", icon = "📷"),
+  ARU = list(color = "#3B8BD4", icon = "🔊")
+)
+
+sensor_types <- unique(simpcw_locs_sf$Sensor)
+
+pal <- colorFactor(
+  palette = sapply(sensor_styles, `[[`, "color")[sensor_types],
+  domain  = sensor_types
+)
 
 simpcw_locs_sf <- simpcw_locs |>
   drop_na(Latitude) |>
   sf::st_as_sf(coords = c("Longitude","Latitude"), crs = 4326)
 
 m <- leaflet(simpcw_locs_sf) %>%
-  addTiles() %>%
-  addCircleMarkers(
-    popup = ~paste0(
-      "<b>Location:</b> ", Location, "<br>",
-      "<b>Sensors:</b> ", Sensor
-    )) %>%
-  addMeasure(primaryLengthUnit = "meters", primaryAreaUnit = "sqmeters") %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  {
+    map_obj <- .
+    for (stype in sensor_types) {
+      style   <- sensor_styles[[stype]]
+      color   <- if (!is.null(style)) style$color else "#888888"
+      subset  <- simpcw_locs_sf[simpcw_locs_sf$Sensor == stype, ]
+
+      map_obj <- map_obj %>%
+        addCircleMarkers(
+          data        = subset,
+          radius      = 8,
+          color       = "white",
+          weight      = 1.5,
+          opacity     = 1,
+          fillColor   = color,
+          fillOpacity = 0.85,
+          popup = ~paste0(
+            "<b>Location:</b> ",  Location, "<br>",
+            "<b>Sensor type:</b> ", Sensor
+          ),
+          group = stype
+        )
+    }
+    map_obj
+  } %>%
+  addLayersControl(
+    overlayGroups = sensor_types,
+    options = layersControlOptions(collapsed = FALSE)
+  ) %>%
+  addLegend(
+    position = "bottomright",
+    colors   = sapply(sensor_styles, `[[`, "color")[sensor_types],
+    labels   = sensor_types,
+    title    = "Sensor type",
+    opacity  = 0.9
+  ) %>%
+
+  addMeasure(
+    primaryLengthUnit = "meters",
+    primaryAreaUnit   = "sqmeters"
+  ) %>%
   addMiniMap(position = "bottomleft")
 
 if (knitr::is_html_output()) {
@@ -231,7 +297,7 @@ datatable(verified_cam_tags,
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| message: false
 #| include: false
 #| results: hide
@@ -262,7 +328,7 @@ all_clean <- bind_rows(simpcw_aru_clean, simpcw_cam_clean) |>
 
 # Results
 
-A total of `r length(unique(all_clean$species_common_name))` species were detected across all monitoring sites. Species detections by location are summarized in @tbl-species-clean, including the maximum count recorded for each species. @fig-shannon @fig-community.
+A total of `r length(unique(all_clean$species_common_name))` species were detected across all monitoring sites. Species detections by location are summarized in @tbl-species-clean, including the maximum count recorded for each species.
 
 ```{r}
 #| warning: false
@@ -319,6 +385,12 @@ shannon_d |>
 
 ```
 
+Species activity 
+
+
 # Discussion and Recommendations
 
-- Conduct ARU sampling during the breeding bird season
+The distribution of ARU recordings reveals two deployment periods concentrated around August 4-11 and August 25, both falling well outside the optimal window for passive acoustic monitoring of birds and amphibians in interior British Columbia. For birds, the primary breeding season, and therefore peak vocal activity, runs from approximately late April through early July. Dawn chorus intensity, which drives the majority of species detections in ARU-based surveys, drops substantially by August as territorial singing ceases following the breeding season. Recordings collected in August are likely to underrepresent species richness and will not be suitable for occupancy or abundance analyses that assume detection probability is tied to breeding activity. For amphibians, calling activity is similarly front-loaded in the season. Most species in the region (e.g., boreal chorus frog, Columbia spotted frog) call from snow-melt through June or early July at most. August recordings are unlikely to capture any meaningful calling activity. If site access is constrained by helicopter availability or snow pack, prioritizing early-season access, even for a subset of sites, will yield substantially more useable data than late-summer visits. For future deployments, the following timing is recommended:
+
+* Birds: Deploy ARUs to capture at minimum the period from late April through late June, ensuring coverage of the full dawn chorus window. Ideally, units should be recording continuously or on a duty cycle from deployment through late June.
+* Amphibians: Target late April through June, with units placed near wetland and riparian features. Evening and overnight recording schedules are preferable for amphibian detection.
