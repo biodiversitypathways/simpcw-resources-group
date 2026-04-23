@@ -394,4 +394,16 @@ The distribution of ARU recordings reveals two deployment periods concentrated a
 -   Birds: Deploy ARUs to capture at minimum the period from late April through late June, ensuring coverage of the full dawn chorus window. Ideally, units should be recording continuously or on a duty cycle from deployment through late June.
 -   Amphibians: Target late April through June, with units placed near wetland and riparian features. Evening and overnight recording schedules are preferable for amphibian detection.
 
-Using a standard recording frequency of 48,000 Hz or 44,100 Hz will align recordings with the conventions used across most bioacoustic workflows, software libraries, and analysis pipelines. The current setting of 48,076 Hz is atypical and can lead to subtle but important issues, including timing drift, incompatibility with resampling routines, and inconsistencies when integrating with reference datasets that assume standard rates. If the same intensive recording schedule is maintained, standardizing the sampling frequency will not materially affect data volume or ecological inference, but will substantially improve interoperability, reproducibility, and processing efficiency.
+Using a standard recording frequency of 48,000 Hz or 44,100 Hz will align recordings with the conventions used across most bioacoustic workflows, software libraries, and analysis pipelines. The current setting of 48,076 Hz is atypical and can lead to subtle but important issues, including timing drift, incompatibility with resampling routines, and inconsistencies when integrating with reference datasets that assume standard rates. If the same intensive recording schedule is maintained, standardizing the sampling frequency will not materially affect data volume or ecological inference, but will substantially improve interoperability, reproducibility, and processing efficiency.\
+\
+Despite 56 unique camera locations and a deployment period of up to one year for some locations, the project has a suprisingly low motion image count for a typical project of this size and duration. While a few cameras seem to have been knocked over by animals, such as RAU-296-1A, the primary contributing factor of the low number of images is likely that both images and video were recorded simultaneously. Compared to image files, high definition video files require a large amount of digital storage and quickly fill SD cards, thus preventing further image capture. While video data is effective at short-term monitoring and behaviour capture, image data allows for longer deployment periods and can be more effective at measuring species richness and relative abundance. Focusing on one of these formats in each deployment rather than both will allow for more effective data collection in line with the goals of the study.\
+\
+Prior to processing, files were structured in a way that required substantial reorganizing before they were ready to upload to WildTrax. For future projects, please ensure that camera data is organized as follows:
+
+-   project_name/locations/overflow_folders/images.jpg
+
+    or
+
+-   project_name/locations/images.jpg
+
+Avoid renaming or restructuring the default file structure that your camera provides, as WildTrax is able to recognize these default file structures, but not custom file structures. An example of an optimal ARU and camera file structure for WildTrax uploading has been included on the returning external drive.
