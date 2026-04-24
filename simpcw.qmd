@@ -13,6 +13,7 @@ format:
       - margin=1in
     papersize: letter
 navbar: right
+lightbox: true
 theme: cosmo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 author: 
@@ -95,6 +96,16 @@ simpcw_locs <- simpcw_cam_projects |>
   distinct() |>
   rename(Location = location, Latitude = latitude, Longitude = longitude)
 
+cam_dep <- srg_cam_imgs |>
+  group_by(locationName) |>
+  summarise(
+    start = min(startDate),
+    end   = max(endDate),
+    .groups = "drop"
+  ) |>
+  rename(location = locationName) |>
+  mutate(sensor = "CAM", startDate = as.character(start), endDate = as.character(end))
+
 ```
 
 # Land Acknowledgement
@@ -105,7 +116,7 @@ simpcw_locs <- simpcw_cam_projects |>
 
 ## Data collection
 
-Cameras and autonomous recording units (ARUs) were deployed across `r n_distinct(simpcw_locs$Location)` sites in the Raush Valley watershed (@fig-aru-monitoring-locations). A total of `r nrow(simpcw_locs)` sensors were deployed, comprising `r simpcw_locs |> filter(Sensor == "Camera") |> nrow()` cameras and `r simpcw_locs |> filter(Sensor == "ARU") |> nrow()` ARUs, distributed across `r simpcw_locs |> mutate(block = str_extract(Location, "RAU-\\d+")) |> distinct(block) |> nrow()` monitoring blocks in the valley. ARUs recorded for 30 min intervals throughout their deployment until battery failure or SD cards were filled up. Cameras were configured for motion-triggered capture, acquiring a three-image burst per detection event. A total of `r nrow(srg_recs)` recordings and `r sum(srg_cam_imgs$totalImageCount)` images were collected, with most data collection spanning between `r min(srg_cam_imgs$startDate)` and `r max(srg_cam_imgs$startDate)`.
+Cameras and autonomous recording units (ARUs) were deployed across `r n_distinct(simpcw_locs$Location)` sites in the Raush Valley watershed (@fig-aru-monitoring-locations). A total of `r nrow(simpcw_locs)` sensors were deployed, comprising `r simpcw_locs |> filter(Sensor == "Camera") |> nrow()` cameras and `r simpcw_locs |> filter(Sensor == "ARU") |> nrow()` ARUs, distributed across `r simpcw_locs |> mutate(block = str_extract(Location, "RAU-\\d+")) |> distinct(block) |> nrow()` monitoring blocks in the valley. ARUs recorded for 30 min intervals throughout their deployment until battery failure or SD cards were filled up. Cameras were configured for motion-triggered capture, acquiring a three-image burst per detection event. A total of `r nrow(srg_recs)` recordings and `r sum(srg_cam_imgs$totalImageCount)` images were collected, with most data collection spanning between `r min(srg_cam_imgs$startDate)` and `r max(srg_cam_imgs$startDate)`. Location names were standardized for this report by aligning sites where ARUs and cameras were co-deployed, assigning the ARU records the corresponding camera location name. These changes were applied only within the reporting outputs; original location names in WildTrax remain unchanged. 
 
 ```{r}
 #| warning: false
@@ -220,13 +231,46 @@ datatable(simpcw_locs,
 
 ```
 
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| fig-align: center
+#| fig-cap: Deployment length of cameras and ARUs.
+#| label: fig-deployment
+
+srg_recs |>
+  group_by(location) |>
+  summarise(
+    start = as.character(min(recording_date_time)),
+    end   = as.character(max(recording_date_time)),
+    .groups = "drop"
+  ) |>
+  mutate(sensor = "ARU") |> 
+  bind_rows(cam_dep) |>
+  mutate(
+    start = as.Date(start),
+    end   = as.Date(end),
+    location = forcats::fct_reorder(location, start)
+  ) |>
+  ggplot(aes(y = location)) +
+  geom_segment(aes(x = start, xend = end, yend = location, colour = sensor), linewidth = 1.5) +
+  geom_point(aes(x = start), size = 2) +
+  geom_point(aes(x = end), size = 2) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size = 6)) +
+  xlab("Date") + ylab("Location")
+
+```
+
+
 ## Acoustic data
 
-::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
-Advanced users can also use `wildrtrax` with `wt_get_sync(api = "organization_recordings", organization = 5647)`. Ensure you have correct access to the Organization as these projects are not currently published `r Sys.Date()`.
-:::
+![Acoustic tagging interface in WildTrax of a recording from RAU-286-2. Includes a vocalization of a Varied Thrush (VATH).](./assets/aru-tagging.png)
 
-The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, we randomly selected 8 recordings per location. Four were processed for 3-minutes between the hours of 3:00 AM - 7:59 AM (dawn period) and four between 20:00 - 23:59 PM (dusk period), ideally on four separate dates. Each of the selections were also chosen on days that did not have any inclement weather (heavy rain or wind), which would be unfavourable for bird surveys. Four samples ensures that there is a minimum number of samples being able to detect most species. Tags are made using count-removal (@farnsworth2002removal, @time-removal) where tags are only made at the time of first detection of each individual heard on the recordings. Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. We also verified that all tags that were created were checked by a second observer to ensure accuracy of detections (@tbl-verified and @tbl-cam-verified). In addition to human transcription, we also ensured that species were not missed at the location level using additional information from HawkEars (@huus2025hawkears), a North American multi-species acoustic classifier, at the task level to avoid false negatives, or missed detections by the tagger. After the data are processed in WildTrax, the wildrtrax package is used to download the data into a standard format prepared for analysis. The wt_download_report function downloads the data directly to a R framework for easy manipulation(see [wildrtrax APIs](https://abbiodiversity.github.io/wildrtrax/articles/apis.html)).
+The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, we randomly selected 8 recordings per location. Four were processed for 3-minutes between the hours of 4:00 AM - 7:59 AM (dawn period) and four between 20:00 - 23:59 PM (dusk period), ideally on four separate dates. Each of the selections were also chosen on days that did not have any inclement weather (heavy rain or wind), which would be unfavourable for bird surveys. Four samples ensures that there is a minimum number of samples being able to detect most species. Tags are made using count-removal (@farnsworth2002removal, @time-removal) where tags are only made at the time of first detection of each individual heard on the recordings. Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. We also verified that all tags that were created were checked by a second observer to ensure accuracy of detections (@tbl-verified and @tbl-cam-verified). In addition to human transcription, we also ensured that species were not missed at the location level using additional information from BirdNET (@kahl2021birdnet) and HawkEars (@huus2025hawkears) at the task level to avoid false negatives, or missed detections by the human observer. After the data are processed in WildTrax, the `wildrtrax` R package is used to download the data into a standard format prepared for analysis. The wt_download_report function downloads the data directly to a R framework for easy manipulation (see [wildrtrax APIs](https://abbiodiversity.github.io/wildrtrax/articles/apis.html)).
 
 ```{r}
 #| warning: false
@@ -260,6 +304,8 @@ datatable(verified_tags,
 ```
 
 ## Camera data
+
+![Camera tagging interface in WildTrax. Shows species verification of Mule Deer from the entire Raush dataset.](./assets/camera-tagging.png)
 
 `r length(unique(simpcw_cam_projects$location))` camera deployments were tagged by different observers using the WildTrax platform. Prior to manual tagging, MegaDetector (@beery2023megadetector) was run on the deployments to auto-tag images with humans, vehicles, and false detections. Bounding boxes were also placed around suspected detections. Detections of animals were tagged for species, and mammal detections received additional tags for count, age, and sex where identification was possible. In addition to animal species, observers manually tagged images with humans, vehicles, and false detections that MegaDetector failed to tag. Tags of mammal species were independently verified by two separate observers who did not participate in initial tagging. Count, age, and sex tags were also verified along with species, and detections tagged as “Unidentified” were verified in case species could be determined. Tags such as human or vehicle, were not verified. Following species verification, tags were quality checked for typos and logical inconsistencies.
 
@@ -321,14 +367,21 @@ simpcw_cam_clean <- simpcw_cam_projects |>
   mutate(total_count = as.numeric(case_when(total_count == "VNA" ~ "1", TRUE ~ total_count))) |>
   left_join(simpcw_locs, by = c("location" = "Location"))
 
+both_sensors <- c("RAU-350-1A","RAU-330-1A","RAU-322-1B","RAU-286-2A")
+
 all_clean <- bind_rows(simpcw_aru_clean, simpcw_cam_clean) |>
-  relocate(Latitude:Sensor, .after = location)
+  relocate(Latitude:Sensor, .after = location) |>
+  mutate(location = case_when(location == "RAU-350-1" ~ "RAU-350-1A",
+                              location == "RAU-330-2" ~ "RAU-330-1A",
+                              location == "RAU-322-2" ~ "RAU-322-1B",
+                              location == "RAU-286-2" ~ "RAU-286-2A",
+                              TRUE ~ location))
   
 ```
 
 # Results
 
-A total of `r length(unique(all_clean$species_common_name))` species were detected across all monitoring sites. Species detections by location are summarized in @tbl-species-clean, including the maximum count recorded for each species.
+A total of `r length(unique(all_clean$species_common_name))` species were detected across all monitoring sites. Species detections by location are summarized in @tbl-species-clean, including the maximum count recorded for each species. Shannon diversity (@shannon1948mathematical) was calculated for each location in the dataset (@fig-shannon). Shannon diversity is an index that represents both species richness (the number of species present) and evenness (the relative distribution of individuals among those species), providing a single metric of community complexity. Higher values indicate communities with a greater number of species and / or a more even distribution of detections, while lower values reflect communities dominated by fewer species or with uneven detection patterns.
 
 ```{r}
 #| warning: false
@@ -371,39 +424,63 @@ shannon_d <- all_clean |>
   group_by(location) |>
   summarise(shannon_index = diversity(count, index = "shannon")) |>
   ungroup() |>
-  filter(!shannon_index == 0)
+  filter(!shannon_index == 0) |>
+  mutate(`Both Sensors` = case_when(location %in% both_sensors ~ TRUE, TRUE ~ FALSE))
 
 shannon_d |>
-  left_join(simpcw_locs |> select(Location, Sensor) |> distinct(), by = c("location" = "Location")) |>
-  ggplot(aes(x=location, y=shannon_index, fill=Sensor)) + 
+  ggplot(aes(x = fct_reorder(location, shannon_index, .desc = TRUE), 
+             y = shannon_index,
+             fill = `Both Sensors`)) + 
   geom_bar(stat = "identity", alpha = 0.7) +
   theme_bw() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   ylab("Shannon's Diversity Index") +
   xlab("Location") + 
   coord_flip()
 
 ```
 
-Species activity
+Camera deployments recorded a diverse assemblage of mammals, with detections dominated by large ungulates and common alpine and subalpine species (see @fig-species). Hoary Marmot was the most frequently detected species (~1,200 images), followed by White-tailed Deer (~750) and Moose (~680). Woodland Caribou were well represented (~620 images) and were detected at all RAU-286 locations, indicating consistent use of the study area. Other notable detections included Grizzly Bear, Mule Deer, and American Pika, though at lower frequencies. Carnivores such as Gray Wolf and Wolverine were detected infrequently. Excluding domestic and non-animal detections (i.e. humans, vehicles, NONE, etc.) `r length(no_animals)` camera locations had no motion detection animals images (`r paste0(no_animals)`). No notable species detections or species-at-risk were recorded from ARU data, likely reflecting seasonal deployment outside peak vocal activity periods (see @sec-acoustic-recommendations). 
 
-# Discussion and Recommendations
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| results: hide
+#| fig-align: center
+#| fig-cap: Count of images with species detections.
+#| label: fig-species
+#| cap-location: bottom
+#| code-fold: true
 
-The distribution of ARU recordings reveals two deployment periods concentrated around August 4-11 and August 25, both falling well outside the optimal window for passive acoustic monitoring of birds and amphibians in interior British Columbia. For birds, the primary breeding season, and therefore peak vocal activity, runs from approximately late April through early July. Dawn chorus intensity, which drives the majority of species detections in ARU-based surveys, drops substantially by August as territorial singing ceases following the breeding season. Recordings collected in August are likely to underrepresent species richness and will not be suitable for occupancy or abundance analyses that assume detection probability is tied to breeding activity. For amphibians, calling activity is similarly front-loaded in the season. Most species in the region (e.g., boreal chorus frog, Columbia spotted frog) call from snow-melt through June or early July at most. August recordings are unlikely to capture any meaningful calling activity. If site access is constrained by helicopter availability or snow pack, prioritizing early-season access, even for a subset of sites, will yield substantially more useable data than late-summer visits. For future deployments, the following timing is recommended:
+simpcw_cam_projects |>
+  filter(!(species_common_name %in% c("NONE","STAFF/SETUP","Human","Vehicle","Domestic Cow","Domestic Dog","Domestic Horse","Unidentified"))) |>
+  group_by(species_common_name) |>
+  summarise(n = n()) |>
+  ggplot(aes(x = fct_reorder(species_common_name, n, .desc = TRUE), y = n, fill = species_common_name)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  guides(fill = "none") +
+  theme_bw() +
+  scale_fill_viridis_d() +
+  xlab("Species") + ylab("Count of images")
+
+```
+
+# Discussion and recommendations
+
+## Acoustic recommendations {#sec-acoustic-recommendations}
+
+The distribution of ARU recordings reveals two deployment periods concentrated around August 4-11 and August 25, both falling well outside the optimal window for passive acoustic monitoring of birds and amphibians in interior British Columbia. For birds, the primary breeding season, and therefore peak vocal activity, runs from approximately late April through early July. Dawn chorus intensity, which drives the majority of species detections in ARU-based surveys, drops substantially by August as territorial singing ceases following the breeding season. Recordings collected in August are likely to underrepresent species richness and will not be suitable for occupancy or abundance analyses that assume detection probability is tied to breeding activity. For amphibians, calling activity is similarly front-loaded in the season. Most species in the region (e.g., Boreal chorus frog, Columbia spotted frog) call from snow-melt through June or early July at most. August recordings are unlikely to capture any meaningful calling activity. If site access is constrained by helicopter availability or snow pack, prioritizing early-season access, even for a subset of sites, will yield substantially more useable data than late-summer visits. For future deployments, the following timing is recommended:
 
 -   Birds: Deploy ARUs to capture at minimum the period from late April through late June, ensuring coverage of the full dawn chorus window. Ideally, units should be recording continuously or on a duty cycle from deployment through late June.
 -   Amphibians: Target late April through June, with units placed near wetland and riparian features. Evening and overnight recording schedules are preferable for amphibian detection.
 
-Using a standard recording frequency of 48,000 Hz or 44,100 Hz will align recordings with the conventions used across most bioacoustic workflows, software libraries, and analysis pipelines. The current setting of 48,076 Hz is atypical and can lead to subtle but important issues, including timing drift, incompatibility with resampling routines, and inconsistencies when integrating with reference datasets that assume standard rates. If the same intensive recording schedule is maintained, standardizing the sampling frequency will not materially affect data volume or ecological inference, but will substantially improve interoperability, reproducibility, and processing efficiency.\
-\
-Despite 56 unique camera locations and a deployment period of up to one year for some locations, the project has a suprisingly low motion image count for a typical project of this size and duration. While a few cameras seem to have been knocked over by animals, such as RAU-296-1A, the primary contributing factor of the low number of images is likely that both images and video were recorded simultaneously. Compared to image files, high definition video files require a large amount of digital storage and quickly fill SD cards, thus preventing further image capture. While video data is effective at short-term monitoring and behaviour capture, image data allows for longer deployment periods and can be more effective at measuring species richness and relative abundance. Focusing on one of these formats in each deployment rather than both will allow for more effective data collection in line with the goals of the study.\
-\
-Prior to processing, files were structured in a way that required substantial reorganizing before they were ready to upload to WildTrax. For future projects, please ensure that camera data is organized as follows:
+Using a standard recording frequency of 48,000 Hz or 44,100 Hz will align recordings with the conventions used across most bioacoustic workflows, software libraries, and analysis pipelines. The current setting of 48,076 Hz is atypical and can lead to subtle but important issues, including timing drift, incompatibility with resampling routines, and inconsistencies when integrating with reference datasets that assume standard rates. If the same intensive recording schedule is maintained, standardizing the sampling frequency will not materially affect data volume or ecological inference, but will substantially improve interoperability, reproducibility, and processing efficiency.
 
--   project_name/locations/overflow_folders/images.jpg
+## Camera recommendations
 
-    or
+Despite a high number of unique camera locations and a deployment period of up to one year, the project has a suprisingly low motion image count for a typical project of this size and duration. While a few cameras seem to have been knocked over by animals, such as RAU-296-1A, the primary contributing factor of the low number of images is likely that both images and video were recorded simultaneously. Compared to image files, high definition video files require a large amount of digital storage and quickly fill SD cards, thus preventing further image capture. While video data is effective at short-term monitoring and behaviour capture, image data allows for longer deployment periods and can be more effective at measuring species richness and relative abundance. Focusing on one of these formats in each deployment rather than both will allow for more effective data collection in line with the goals of the study.
 
--   project_name/locations/images.jpg
-
-Avoid renaming or restructuring the default file structure that your camera provides, as WildTrax is able to recognize these default file structures, but not custom file structures. An example of an optimal ARU and camera file structure for WildTrax uploading has been included on the returning external drive.
+Prior to processing, files were structured in a way that required substantial reorganizing before they were ready to upload to WildTrax. For future projects, please ensure that camera data is organized as `Project_Name/Location/Overflow_folders/images.jpg` or `Project_Name/Locations/images.jpg`. Avoid renaming or restructuring the default file structure that your camera provides, as WildTrax is able to recognize these default file structures, but not custom file structures. An example of an optimal ARU and camera file structure for WildTrax uploading has been included on the returning external drive.
